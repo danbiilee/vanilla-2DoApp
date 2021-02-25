@@ -1,28 +1,48 @@
 :root {
-  /* Color */
-  --mainWhite: #f2f2f2;
-  --shadowWhite: -4px -4px 8px rgba(255, 255, 255, 0.7),
-    -4px -4px 8px rgba(255, 255, 255, 0.5),
-    4px 4px 8px rgba(255, 255, 255, 0.075), 4px 4px 8px rgba(0, 0, 0, 0.15);
-  --shadowWhiteSmall: -2px -2px 6px rgba(255, 255, 255, 0.6),
-    -2px -2px 4px rgba(255, 255, 255, 0.4),
-    2px 2px 2px rgba(255, 255, 255, 0.05), 2px 2px 4px rgba(0, 0, 0, 0.1);
-  --shadowWhiteInset: inset -4px -4px 6px rgba(255, 255, 255, 0.7),
-    inset -4px -4px 4px rgba(255, 255, 255, 0.5),
-    inset 4px 4px 2px rgba(255, 255, 255, 0.075),
-    inset 4px 4px 5px rgba(0, 0, 0, 0.15);
-  --shadowWhiteInsetSmall: inset -2px -2px 6px rgba(255, 255, 255, 0.7),
-    inset -2px -2px 4px rgba(255, 255, 255, 0.5),
-    inset 2px 2px 2px rgba(255, 255, 255, 0.075),
-    inset 2px 2px 4px rgba(0, 0, 0, 0.15);
-  --iconWhiteVer: #6a9bd8;
+  /* Main Color */
+  --color-white: #f9f6f6;
+  --color-gray-light: #f2f2f2;
+  --color-gray: #e6e5e5;
+  --color-gray-dark: #d8d8d8;
+  --color-black: #333;
+  --color-blue-light: #c0e0e5;
+  --color-blue: #a9d2d9;
+  --color-blue-dark: #238db3;
+  --color-icon: #6a9bd8;
+
+  /* Shadow */
+  /* Blue */
+  --shadow-blue: 4px 4px 8px #8eb0b6f8, -4px -4px 8px #c4f4fcc5;
+  --shadow-blue-small: 2px 2px 6px #8eb0b6f8, -2px -2px 6px #c4f4fcd8;
+  --shadow-blue-inset-small: inset 2px 2px 6px #8eb0b6f8,
+    inset -2px -2px 6px #c4f4fcc5;
+  /* Gray */
+  --shadow-light: 4px 4px 8px #ccccccf3, -4px -4px 8px #fffffff6;
+  --shadow-light-small: 2px 2px 6px #ccccccf3, -2px -2px 6px #fffffff6;
+  --shadow-light-inset-small: inset 2px 2px 6px #ccccccf3,
+    inset -2px -2px 6px #fffffff6;
+  --shadow-gray: 4px 4px 8px #c1c0c0f3, -4px -4px 8px #fffffff6;
+  --shadow-gray-small: 2px 2px 6px #c1c0c0f3, -2px -2px 6px #fffffff6;
+  --shadow-gray-inset-small: inset 2px 2px 6px #c1c0c0f3,
+    inset -2px -2px 6px #fffffff6;
+  --shadow-dark: 4px 4px 8px #b5b5b5f3, -4px -4px 8px #fffffff6;
+  --shadow-dark-small: 2px 2px 6px #b5b5b5f3, -2px -2px 6px #fffffff6;
+  --shadow-dark-inset-small: inset 2px 2px 6px #b5b5b5f3,
+    inset -2px -2px 6px #fffffff6;
+
+  /* Size */
+  --base-space: 10px;
+  --font-size: 18px;
+
+  /* Animation */
+  --animation-duration: 0.3s;
+  --animation-timing: ease-in-out;
 
   /* Font */
-  --font-color: #333;
   --font-family: "Noto Sans KR", sans-serif;
-  --font-size: 1rem;
 }
 
+/* Common */
 * {
   box-sizing: border-box;
 }
@@ -30,6 +50,183 @@
 body,
 input,
 textarea {
-  color: var(--font-color);
+  color: var(--color-black);
   font-family: var(--font-family);
+}
+
+button {
+  padding: var(--base-space);
+  border-radius: calc(var(--base-space) / 2);
+  background-color: var(--color-gray-light);
+  box-shadow: var(--shadow-light);
+  transition: box-shadow var(--animation-duration) var(--animation-timing);
+  font-weight: bold;
+}
+button.gray {
+  background-color: var(--color-gray);
+  box-shadow: var(--shadow-gray);
+}
+button.dark {
+  background-color: var(--color-gray-dark);
+  box-shadow: var(--shadow-dark);
+}
+button.blue {
+  background-color: var(--color-blue);
+  box-shadow: var(--shadow-blue);
+}
+
+button:hover {
+  box-shadow: var(--shadow-light-small);
+}
+button.gray:hover {
+  box-shadow: var(--shadow-gray-small);
+}
+button.dark:hover {
+  box-shadow: var(--shadow-dark-small);
+}
+button.blue:hover {
+  box-shadow: var(--shadow-blue-small);
+}
+
+button:active {
+  box-shadow: var(--shadow-light-inset-small);
+}
+button.gray:active {
+  box-shadow: var(--shadow-gray-inset-small);
+}
+button.dark:active {
+  box-shadow: var(--shadow-dark-inset-small);
+}
+button.blue:active {
+  box-shadow: var(--shadow-blue-inset-small);
+}
+
+svg {
+  fill: var(--color-blue-dark);
+}
+
+svg.black {
+  fill: var(--color-black);
+}
+
+/* Layout */
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: var(--color-gray-light);
+}
+
+main {
+  position: relative;
+  width: 30%;
+  border-radius: var(--base-space);
+  background-color: var(--color-white);
+  box-shadow: var(--shadow-light);
+}
+
+.main-header {
+  position: fixed;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 30%;
+  padding: calc(var(--base-space) * 2);
+  border-radius: var(--base-space) var(--base-space) 0 0;
+  background-color: var(--color-blue);
+}
+
+.main-header h1 {
+  font-size: calc(var(--font-size) * 1.5);
+}
+
+.main-container {
+  overflow-y: auto;
+  max-height: 80vh;
+  margin-top: 78px;
+}
+
+/* Add Item */
+.add-todo {
+  display: none;
+}
+
+.add-todo.display {
+  display: block;
+}
+
+/* ToDoList */
+/* Header */
+.todos-header {
+  padding: var(--base-space) calc(var(--base-space) * 2);
+}
+
+.todos-header.incomplete {
+  background-color: var(--color-blue-light);
+}
+
+.todos-header.complete {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  border-radius: 0 0 var(--base-space) var(--base-space);
+  background-color: var(--color-gray-dark);
+}
+
+.todos-header h2 {
+  font-size: var(--font-size);
+  font-weight: normal;
+}
+
+.todos-header.complete h2 {
+  margin-right: var(--base-space);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* List */
+.todo {
+  display: flex;
+  align-items: center;
+  padding: calc(var(--base-space) * 2);
+  margin-bottom: calc(var(--base-space) / 2);
+  background-color: var(--color-gray-light);
+}
+
+.todo.complete {
+  background-color: var(--color-gray);
+}
+
+.todos.complete .todo:last-of-type {
+  margin-bottom: 0;
+}
+
+.btn.check,
+.btn.delete-all {
+  padding: 0;
+}
+
+.title {
+  word-break: break-all;
+  width: 70%;
+  padding: 0 var(--base-space);
+  font-size: calc(var(--font-size) * 1.1);
+}
+
+.title.complete {
+  text-decoration: line-through;
+}
+
+.buttons {
+  display: flex;
+  margin-left: auto;
+}
+
+.buttons .btn:not(:last-of-type) {
+  margin-right: var(--base-space);
+}
+
+.complete .btn:disabled {
+  background: yellow;
 }
