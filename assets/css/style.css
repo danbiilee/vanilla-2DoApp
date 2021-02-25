@@ -49,9 +49,11 @@
 
 body,
 input,
-textarea {
+textarea,
+button {
   color: var(--color-black);
   font-family: var(--font-family);
+  font-size: var(--font-size);
 }
 
 button {
@@ -147,16 +149,58 @@ main {
   margin-top: 78px;
 }
 
-/* Add Item */
-.add-todo {
-  display: none;
+.add-on .main-container {
+  margin-top: 0;
 }
 
-.add-todo.display {
+.add-on .add-todo {
   display: block;
+  margin-top: 78px;
+  background-color: var(--color-blue);
+}
+
+.add-todo {
+  display: none;
+  margin-top: 0;
+}
+
+.add-todo .buttons {
+  padding: var(--base-space);
+}
+
+.add-todo .btn {
+  font-size: calc(var(--font-size) * 0.9);
+}
+
+.btn.add {
+  color: var(--color-blue-dark);
+}
+
+.border-container {
+  display: flex;
+  flex-direction: column;
+  margin: 0 calc(var(--base-space) * 2);
+  border: 3px solid var(--color-blue-dark);
+  border-radius: calc(var(--base-space) / 2);
+  background-color: var(--color-gray-light);
+}
+
+.txtarea {
+  height: 60px;
+  padding: var(--base-space);
+  background-color: var(--color-gray-light);
+  resize: none;
 }
 
 /* ToDoList */
+.todos.complete {
+  display: none;
+}
+
+.todos.complete.display {
+  display: block;
+}
+
 /* Header */
 .todos-header {
   padding: var(--base-space) calc(var(--base-space) * 2);

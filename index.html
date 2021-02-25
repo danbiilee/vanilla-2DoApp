@@ -19,7 +19,7 @@
   </head>
   <body>
     <!-- Show All Items -->
-    <main>
+    <main class="add-on">
       <!-- Header: Add Item -->
       <header class="main-header">
         <h1>2Do</h1>
@@ -34,14 +34,16 @@
             <path d="M24 10h-10v-10h-4v10h-10v4h10v10h4v-10h10z" />
           </svg>
         </button>
-        <div class="add-todo">
-          <textarea name="" id="" cols="30" rows="10"></textarea>
+      </header>
+      <section class="add-todo">
+        <div class="border-container">
+          <textarea class="txtarea" name="" cols="30" rows="10"></textarea>
           <div class="buttons">
-            <button class="btn">취소</button>
-            <button class="btn">만들기</button>
+            <button class="btn cancel">취소</button>
+            <button class="btn add">만들기</button>
           </div>
         </div>
-      </header>
+      </section>
       <div class="main-container">
         <!-- ToDoList: Incomplete Items -->
         <section>
