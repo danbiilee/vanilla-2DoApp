@@ -21,9 +21,5 @@
   "homepage": "https://danbiilee.github.io/vanilla-2DoApp",
   "dependencies": {
     "gh-pages": "^3.1.0"
-  },
-  "devDependencies": {
-    "webpack": "^5.24.2",
-    "webpack-cli": "^4.5.0"
   }
 }
