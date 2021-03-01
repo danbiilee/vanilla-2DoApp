@@ -1,3 +1,7 @@
+const defaultPromise = new Promise((resolve, reject) => {
+  resolve(true);
+});
+
 export const getTodos = () => {
   const todos = localStorage.getItem('2Do');
   if (!todos) {
@@ -12,9 +16,7 @@ export const addTodo = async (payload) => {
   let todos = await getTodos();
   todos = todos ? todos : []; // 초기화
   localStorage.setItem('2Do', JSON.stringify(todos.concat(payload)));
-  return new Promise((resolve, reject) => {
-    resolve(true);
-  });
+  return defaultPromise;
 };
 
 export const toggleTodo = async (id) => {
@@ -27,23 +29,35 @@ export const toggleTodo = async (id) => {
       ),
     ),
   );
-  return new Promise((resolve, reject) => {
-    resolve(true);
-  });
+  return defaultPromise;
 };
 
-export const deleteTodo = (id) => {
-  const todos = getTodos();
+export const deleteTodo = async (id) => {
+  const todos = await getTodos();
   localStorage.setItem(
     '2Do',
     JSON.stringify(todos.filter((todo) => todo.id !== id)),
   );
+  return defaultPromise;
 };
 
-export const deleteCompletedTodos = () => {
-  const todos = getTodos();
+export const deleteCompletedTodos = async () => {
+  const todos = await getTodos();
   localStorage.setItem(
     '2Do',
     JSON.stringify(todos.filter((todo) => !todo.complete)),
   );
+  return defaultPromise;
+};
+
+export const editTodo = async (payload) => {
+  const { id, title } = payload;
+  const todos = await getTodos();
+  localStorage.setItem(
+    '2Do',
+    JSON.stringify(
+      todos.map((todo) => (todo.id === id ? { ...todo, title } : todo)),
+    ),
+  );
+  return defaultPromise;
 };
