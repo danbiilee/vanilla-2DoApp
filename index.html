@@ -67,7 +67,7 @@
       <!-- Header: Add Item -->
       <header class="main-header">
         <h1>2Do</h1>
-        <button class="btn blue toggle">
+        <button class="btn blue toggle" title="할 일 추가하기">
           <svg
             class="black"
             xmlns="http://www.w3.org/2000/svg"
@@ -84,7 +84,7 @@
           <textarea class="txtarea" name="" cols="30" rows="10"></textarea>
           <div class="buttons">
             <button class="btn toggle">취소</button>
-            <button class="btn add">만들기</button>
+            <button class="btn add">추가하기</button>
           </div>
         </div>
       </section>
@@ -98,52 +98,15 @@
         </section>
         <!-- ToDoList: Completed Items -->
         <section class="complete">
-          <ul class="todos">
-            <!-- <li class="todo">
-              <button class="btn check complete">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="22"
-                  height="22"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M19 0h-14c-2.762 0-5 2.239-5 5v14c0 2.761 2.238 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-8.959 17l-4.5-4.319 1.395-1.435 3.08 2.937 7.021-7.183 1.422 1.409-8.418 8.591z" />
-                </svg>
-              </button>
-              <span class="title complete">완료된 할 일1</span>
-              <div class="buttons">
-                <button class="btn gray">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M18.363 8.464l1.433 1.431-12.67 12.669-7.125 1.436 1.439-7.127 12.665-12.668 1.431 1.431-12.255 12.224-.726 3.584 3.584-.723 12.224-12.257zm-.056-8.464l-2.815 2.817 5.691 5.692 2.817-2.821-5.693-5.688zm-12.318 18.718l11.313-11.316-.705-.707-11.313 11.314.705.709z"
-                    />
-                  </svg>
-                </button>
-                <button class="btn gray">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M9 19c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm4 0c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm4 0c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm5-17v2h-20v-2h5.711c.9 0 1.631-1.099 1.631-2h5.315c0 .901.73 2 1.631 2h5.712zm-3 4v16h-14v-16h-2v18h18v-18h-2z"
-                    />
-                  </svg>
-                </button>
-              </div>
-            </li> -->
-          </ul>
+          <ul class="todos"></ul>
           <header class="todos-header">
             <h2 class="toggle">
               완료된 할 일 <span class="cnt"></span>개 보기
             </h2>
-            <button class="btn dark delete-all">
+            <button
+              class="btn dark delete-all"
+              title="완료된 할 일 전부 삭제하기"
+            >
               <svg
                 class="black"
                 xmlns="http://www.w3.org/2000/svg"
