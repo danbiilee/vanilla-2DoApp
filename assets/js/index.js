@@ -84,8 +84,14 @@ const onClickAddTodo = async () => {
     return;
   }
 
+  // id: Max 값 찾기
+  let id = todos.reduce((prev, cur) => {
+    return Math.max(prev, cur.id);
+  }, 0);
+  id++;
+
   const newTodo = {
-    id: todos.length,
+    id,
     title: title.value,
     complete: false,
   };
