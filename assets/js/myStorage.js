@@ -13,51 +13,71 @@ export const getTodos = () => {
 };
 
 export const addTodo = async (payload) => {
-  let todos = await getTodos();
-  todos = todos ? todos : []; // 초기화
-  localStorage.setItem('2Do', JSON.stringify(todos.concat(payload)));
-  return defaultPromise;
+  try {
+    let todos = await getTodos();
+    todos = todos ? todos : []; // 초기화
+    localStorage.setItem('2Do', JSON.stringify(todos.concat(payload)));
+    return defaultPromise;
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 export const toggleTodo = async (id) => {
-  const todos = await getTodos();
-  localStorage.setItem(
-    '2Do',
-    JSON.stringify(
-      todos.map((todo) =>
-        todo.id === id ? { ...todo, complete: !todo.complete } : todo,
+  try {
+    const todos = await getTodos();
+    localStorage.setItem(
+      '2Do',
+      JSON.stringify(
+        todos.map((todo) =>
+          todo.id === id ? { ...todo, complete: !todo.complete } : todo,
+        ),
       ),
-    ),
-  );
-  return defaultPromise;
+    );
+    return defaultPromise;
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 export const deleteTodo = async (id) => {
-  const todos = await getTodos();
-  localStorage.setItem(
-    '2Do',
-    JSON.stringify(todos.filter((todo) => todo.id !== id)),
-  );
-  return defaultPromise;
+  try {
+    const todos = await getTodos();
+    localStorage.setItem(
+      '2Do',
+      JSON.stringify(todos.filter((todo) => todo.id !== id)),
+    );
+    return defaultPromise;
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 export const deleteCompletedTodos = async () => {
-  const todos = await getTodos();
-  localStorage.setItem(
-    '2Do',
-    JSON.stringify(todos.filter((todo) => !todo.complete)),
-  );
-  return defaultPromise;
+  try {
+    const todos = await getTodos();
+    localStorage.setItem(
+      '2Do',
+      JSON.stringify(todos.filter((todo) => !todo.complete)),
+    );
+    return defaultPromise;
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 export const editTodo = async (payload) => {
   const { id, title } = payload;
-  const todos = await getTodos();
-  localStorage.setItem(
-    '2Do',
-    JSON.stringify(
-      todos.map((todo) => (todo.id === id ? { ...todo, title } : todo)),
-    ),
-  );
-  return defaultPromise;
+  try {
+    const todos = await getTodos();
+    localStorage.setItem(
+      '2Do',
+      JSON.stringify(
+        todos.map((todo) => (todo.id === id ? { ...todo, title } : todo)),
+      ),
+    );
+    return defaultPromise;
+  } catch (e) {
+    console.log(e);
+  }
 };

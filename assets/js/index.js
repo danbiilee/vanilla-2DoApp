@@ -1,32 +1,37 @@
 import * as api from './myStorage.js';
+import { handleError } from './utils.js';
 
 // 데이터 로드
 const loadData = async () => {
-  const todos = await api.getTodos();
-  const incompleteTodos =
-    todos.length > 0 ? todos.filter((todo) => !todo.complete) : [];
-  const completeTodos =
-    todos.length > 0 ? todos.filter((todo) => todo.complete) : [];
+  try {
+    const todos = await api.getTodos();
+    const incompleteTodos =
+      todos.length > 0 ? todos.filter((todo) => !todo.complete) : [];
+    const completeTodos =
+      todos.length > 0 ? todos.filter((todo) => todo.complete) : [];
 
-  // 개수 셋팅
-  const incompleteCnt = document.querySelector('.incomplete .cnt');
-  const completeCnt = document.querySelector('.complete .cnt');
-  incompleteCnt.innerHTML = incompleteTodos.length;
-  completeCnt.innerHTML = completeTodos.length;
+    // 개수 셋팅
+    const incompleteCnt = document.querySelector('.incomplete .cnt');
+    const completeCnt = document.querySelector('.complete .cnt');
+    incompleteCnt.innerHTML = incompleteTodos.length;
+    completeCnt.innerHTML = completeTodos.length;
 
-  // 리스트 셋팅
-  const incompleteUl = document.querySelector('.incomplete .todos');
-  const completeUl = document.querySelector('.complete .todos');
-  incompleteUl.innerHTML = incompleteTodos
-    .map((todo) => getElementByText(todo))
-    .join('');
-  completeUl.innerHTML = completeTodos
-    .map((todo) => getElementByText(todo))
-    .join('');
+    // 리스트 셋팅
+    const incompleteUl = document.querySelector('.incomplete .todos');
+    const completeUl = document.querySelector('.complete .todos');
+    incompleteUl.innerHTML = incompleteTodos
+      .map((todo) => getElementByText(todo))
+      .join('');
+    completeUl.innerHTML = completeTodos
+      .map((todo) => getElementByText(todo))
+      .join('');
 
-  return new Promise((resolve, reject) => {
-    resolve(todos);
-  });
+    return new Promise((resolve, reject) => {
+      resolve(todos);
+    });
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 // li 요소 동적 생성
@@ -76,7 +81,10 @@ const onToggleAddTodo = () => {
 
 // 할 일 추가
 const onClickAddTodo = async () => {
-  const todos = await api.getTodos();
+  const [todosError, todos] = await handleError(api.getTodos());
+
+  if (todosError) throw new Error('할 일 목록 조회 실패!');
+
   const title = document.querySelector('.txtarea');
   if (!title.value) {
     alert('⚠ 할 일을 입력해주세요 ⚠');
@@ -95,7 +103,10 @@ const onClickAddTodo = async () => {
     title: title.value,
     complete: false,
   };
-  const result = await api.addTodo(newTodo);
+  const [resultError, result] = await handleError(api.addTodo(newTodo));
+
+  if (resultError) throw new Error('할 일 추가 실패!');
+
   if (result) {
     onToggleAddTodo(); // 추가 영역 토글
     handleLoadPromise(); // 리로드
@@ -108,9 +119,13 @@ const onToggleCheck = async (e) => {
   if (!checkBtn) {
     return;
   }
-  const result = await api.toggleTodo(parseInt(checkBtn.dataset.id, 10));
-  if (result) {
-    handleLoadPromise(); // 리로드
+  try {
+    const result = await api.toggleTodo(parseInt(checkBtn.dataset.id, 10));
+    if (result) {
+      handleLoadPromise(); // 리로드
+    }
+  } catch (e) {
+    console.log(e);
   }
 };
 
@@ -126,17 +141,25 @@ const onDeleteTodo = async (e) => {
   if (!delBtn) {
     return;
   }
-  const result = await api.deleteTodo(parseInt(delBtn.dataset.id, 10));
-  if (result) {
-    handleLoadPromise(); // 리로드
+  try {
+    const result = await api.deleteTodo(parseInt(delBtn.dataset.id, 10));
+    if (result) {
+      handleLoadPromise(); // 리로드
+    }
+  } catch (e) {
+    console.log(e);
   }
 };
 
 // 완료 아이템 전부 삭제
 const onDeleteCompletedTodos = async () => {
-  const result = await api.deleteCompletedTodos();
-  if (result) {
-    handleLoadPromise(); // 리로드
+  try {
+    const result = await api.deleteCompletedTodos();
+    if (result) {
+      handleLoadPromise(); // 리로드
+    }
+  } catch (e) {
+    console.log(e);
   }
 };
 
@@ -174,7 +197,9 @@ const handleEdit = async (e) => {
 
 const changeEdit = async (payload) => {
   const { id, title } = payload;
-  const todos = await api.getTodos();
+  const [todosError, todos] = await handleError(api.getTodos());
+
+  if (todosError) throw new Error('할 일 목록 조회 실패!');
 
   // 비교
   const diff = todos.find((todo) => todo.id === id).title === title;
@@ -183,14 +208,17 @@ const changeEdit = async (payload) => {
   }
 
   // 이전 값과 다를 때만 변경
-  const result = await api.editTodo(payload);
+  const [resultError, result] = await handleError(api.editTodo(payload));
+
+  if (resultError) throw new Error('수정 실패!');
+
   if (result) {
     handleLoadPromise(); // 리로드
   }
 };
 
 // 이벤트 등록
-const setEventListeners = (todos) => {
+const setEventListeners = () => {
   const toggleBtn = document.querySelectorAll('.btn.toggle');
   const addBtn = document.querySelector('.btn.add');
   const checkBtn = document.querySelectorAll('.btn.check');
@@ -229,9 +257,7 @@ const setEventListeners = (todos) => {
 
 const handleLoadPromise = () => {
   loadData() //
-    .then((todos) => {
-      setEventListeners(todos);
-    })
+    .then(setEventListeners)
     .catch(console.log);
 };
 
