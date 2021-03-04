@@ -3,7 +3,9 @@ import { handleError, throwError, defaultPromise } from './utils.js';
 export const getTodos = () => {
   const todos = localStorage.getItem('2Do');
   if (!todos) {
-    return [];
+    return new Promise((resolve, reject) => {
+      resolve(null);
+    });
   }
   return new Promise((resolve, reject) => {
     resolve(JSON.parse(todos));

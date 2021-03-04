@@ -1,5 +1,5 @@
 import * as api from './myStorage.js';
-import { handleError, throwError } from './utils.js';
+import { handleError, throwError, defaultPromise } from './utils.js';
 
 // 데이터 로드
 const loadData = async () => {
@@ -9,10 +9,8 @@ const loadData = async () => {
   }
 
   // 카테고리별 조회
-  const incompleteTodos =
-    todos.length > 0 ? todos.filter((todo) => !todo.complete) : [];
-  const completeTodos =
-    todos.length > 0 ? todos.filter((todo) => todo.complete) : [];
+  const incompleteTodos = todos ? todos.filter((todo) => !todo.complete) : [];
+  const completeTodos = todos ? todos.filter((todo) => todo.complete) : [];
 
   // 개수 셋팅
   const incompleteCnt = document.querySelector('.incomplete .cnt');
@@ -30,9 +28,7 @@ const loadData = async () => {
     .map((todo) => getElementByText(todo))
     .join('');
 
-  return new Promise((resolve, reject) => {
-    resolve(todos);
-  });
+  return defaultPromise;
 };
 
 // li 요소 동적 생성
