@@ -1,6 +1,4 @@
-const defaultPromise = new Promise((resolve, reject) => {
-  resolve(true);
-});
+import { handleError, throwError, defaultPromise } from './utils.js';
 
 export const getTodos = () => {
   const todos = localStorage.getItem('2Do');
@@ -12,72 +10,62 @@ export const getTodos = () => {
   });
 };
 
-export const addTodo = async (payload) => {
-  try {
-    let todos = await getTodos();
-    todos = todos ? todos : []; // 초기화
-    localStorage.setItem('2Do', JSON.stringify(todos.concat(payload)));
-    return defaultPromise;
-  } catch (e) {
-    console.log(e);
-  }
+export const addTodo = async (todos, payload) => {
+  const initTodos = todos ? todos : []; // 초기화
+  localStorage.setItem('2Do', JSON.stringify(initTodos.concat(payload)));
+  return defaultPromise;
 };
 
 export const toggleTodo = async (id) => {
-  try {
-    const todos = await getTodos();
-    localStorage.setItem(
-      '2Do',
-      JSON.stringify(
-        todos.map((todo) =>
-          todo.id === id ? { ...todo, complete: !todo.complete } : todo,
-        ),
-      ),
-    );
-    return defaultPromise;
-  } catch (e) {
-    console.log(e);
+  const [todosError, todos] = await handleError(getTodos());
+  if (todosError) {
+    throwError('할 일 목록 조회');
   }
+
+  localStorage.setItem(
+    '2Do',
+    JSON.stringify(
+      todos.map((todo) =>
+        todo.id === id ? { ...todo, complete: !todo.complete } : todo,
+      ),
+    ),
+  );
+  return defaultPromise;
 };
 
 export const deleteTodo = async (id) => {
-  try {
-    const todos = await getTodos();
-    localStorage.setItem(
-      '2Do',
-      JSON.stringify(todos.filter((todo) => todo.id !== id)),
-    );
-    return defaultPromise;
-  } catch (e) {
-    console.log(e);
+  const [todosError, todos] = await handleError(getTodos());
+  if (todosError) {
+    throwError('할 일 목록 조회');
   }
+
+  localStorage.setItem(
+    '2Do',
+    JSON.stringify(todos.filter((todo) => todo.id !== id)),
+  );
+  return defaultPromise;
 };
 
 export const deleteCompletedTodos = async () => {
-  try {
-    const todos = await getTodos();
-    localStorage.setItem(
-      '2Do',
-      JSON.stringify(todos.filter((todo) => !todo.complete)),
-    );
-    return defaultPromise;
-  } catch (e) {
-    console.log(e);
+  const [todosError, todos] = await handleError(getTodos());
+  if (todosError) {
+    throwError('할 일 목록 조회');
   }
+
+  localStorage.setItem(
+    '2Do',
+    JSON.stringify(todos.filter((todo) => !todo.complete)),
+  );
+  return defaultPromise;
 };
 
-export const editTodo = async (payload) => {
+export const editTodo = async (todos, payload) => {
   const { id, title } = payload;
-  try {
-    const todos = await getTodos();
-    localStorage.setItem(
-      '2Do',
-      JSON.stringify(
-        todos.map((todo) => (todo.id === id ? { ...todo, title } : todo)),
-      ),
-    );
-    return defaultPromise;
-  } catch (e) {
-    console.log(e);
-  }
+  localStorage.setItem(
+    '2Do',
+    JSON.stringify(
+      todos.map((todo) => (todo.id === id ? { ...todo, title } : todo)),
+    ),
+  );
+  return defaultPromise;
 };

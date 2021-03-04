@@ -1,37 +1,38 @@
 import * as api from './myStorage.js';
-import { handleError } from './utils.js';
+import { handleError, throwError } from './utils.js';
 
 // 데이터 로드
 const loadData = async () => {
-  try {
-    const todos = await api.getTodos();
-    const incompleteTodos =
-      todos.length > 0 ? todos.filter((todo) => !todo.complete) : [];
-    const completeTodos =
-      todos.length > 0 ? todos.filter((todo) => todo.complete) : [];
-
-    // 개수 셋팅
-    const incompleteCnt = document.querySelector('.incomplete .cnt');
-    const completeCnt = document.querySelector('.complete .cnt');
-    incompleteCnt.innerHTML = incompleteTodos.length;
-    completeCnt.innerHTML = completeTodos.length;
-
-    // 리스트 셋팅
-    const incompleteUl = document.querySelector('.incomplete .todos');
-    const completeUl = document.querySelector('.complete .todos');
-    incompleteUl.innerHTML = incompleteTodos
-      .map((todo) => getElementByText(todo))
-      .join('');
-    completeUl.innerHTML = completeTodos
-      .map((todo) => getElementByText(todo))
-      .join('');
-
-    return new Promise((resolve, reject) => {
-      resolve(todos);
-    });
-  } catch (e) {
-    console.log(e);
+  const [todosError, todos] = await handleError(api.getTodos());
+  if (todosError) {
+    throwError('할 일 목록 조회');
   }
+
+  // 카테고리별 조회
+  const incompleteTodos =
+    todos.length > 0 ? todos.filter((todo) => !todo.complete) : [];
+  const completeTodos =
+    todos.length > 0 ? todos.filter((todo) => todo.complete) : [];
+
+  // 개수 셋팅
+  const incompleteCnt = document.querySelector('.incomplete .cnt');
+  const completeCnt = document.querySelector('.complete .cnt');
+  incompleteCnt.innerHTML = incompleteTodos.length;
+  completeCnt.innerHTML = completeTodos.length;
+
+  // 리스트 셋팅
+  const incompleteUl = document.querySelector('.incomplete .todos');
+  const completeUl = document.querySelector('.complete .todos');
+  incompleteUl.innerHTML = incompleteTodos
+    .map((todo) => getElementByText(todo))
+    .join('');
+  completeUl.innerHTML = completeTodos
+    .map((todo) => getElementByText(todo))
+    .join('');
+
+  return new Promise((resolve, reject) => {
+    resolve(todos);
+  });
 };
 
 // li 요소 동적 생성
@@ -82,8 +83,9 @@ const onToggleAddTodo = () => {
 // 할 일 추가
 const onClickAddTodo = async () => {
   const [todosError, todos] = await handleError(api.getTodos());
-
-  if (todosError) throw new Error('할 일 목록 조회 실패!');
+  if (todosError) {
+    throwError('할 일 목록 조회');
+  }
 
   const title = document.querySelector('.txtarea');
   if (!title.value) {
@@ -96,16 +98,18 @@ const onClickAddTodo = async () => {
   let id = todos.reduce((prev, cur) => {
     return Math.max(prev, cur.id);
   }, 0);
-  id++;
 
+  // 새 객체 생성
   const newTodo = {
-    id,
+    id: ++id,
     title: title.value,
     complete: false,
   };
-  const [resultError, result] = await handleError(api.addTodo(newTodo));
 
-  if (resultError) throw new Error('할 일 추가 실패!');
+  const [resultError, result] = await handleError(api.addTodo(todos, newTodo));
+  if (resultError) {
+    throwError('할 일 추가');
+  }
 
   if (result) {
     onToggleAddTodo(); // 추가 영역 토글
@@ -119,13 +123,16 @@ const onToggleCheck = async (e) => {
   if (!checkBtn) {
     return;
   }
-  try {
-    const result = await api.toggleTodo(parseInt(checkBtn.dataset.id, 10));
-    if (result) {
-      handleLoadPromise(); // 리로드
-    }
-  } catch (e) {
-    console.log(e);
+
+  const [resultError, result] = await handleError(
+    api.toggleTodo(parseInt(checkBtn.dataset.id, 10)),
+  );
+  if (resultError) {
+    throwError('완료 여부 변경');
+  }
+
+  if (result) {
+    handleLoadPromise(); // 리로드
   }
 };
 
@@ -141,25 +148,27 @@ const onDeleteTodo = async (e) => {
   if (!delBtn) {
     return;
   }
-  try {
-    const result = await api.deleteTodo(parseInt(delBtn.dataset.id, 10));
-    if (result) {
-      handleLoadPromise(); // 리로드
-    }
-  } catch (e) {
-    console.log(e);
+
+  const [resultError, result] = await handleError(
+    api.deleteTodo(parseInt(delBtn.dataset.id, 10)),
+  );
+  if (resultError) {
+    throwError('할 일 삭제');
+  }
+
+  if (result) {
+    handleLoadPromise(); // 리로드
   }
 };
 
 // 완료 아이템 전부 삭제
 const onDeleteCompletedTodos = async () => {
-  try {
-    const result = await api.deleteCompletedTodos();
-    if (result) {
-      handleLoadPromise(); // 리로드
-    }
-  } catch (e) {
-    console.log(e);
+  const [resultError, result] = await handleError(api.deleteCompletedTodos());
+  if (resultError) {
+    throwError('완료된 할 일 전부 삭제');
+  }
+  if (result) {
+    handleLoadPromise(); // 리로드
   }
 };
 
@@ -198,8 +207,9 @@ const handleEdit = async (e) => {
 const changeEdit = async (payload) => {
   const { id, title } = payload;
   const [todosError, todos] = await handleError(api.getTodos());
-
-  if (todosError) throw new Error('할 일 목록 조회 실패!');
+  if (todosError) {
+    throwError('할 일 목록 조회');
+  }
 
   // 비교
   const diff = todos.find((todo) => todo.id === id).title === title;
@@ -208,9 +218,10 @@ const changeEdit = async (payload) => {
   }
 
   // 이전 값과 다를 때만 변경
-  const [resultError, result] = await handleError(api.editTodo(payload));
-
-  if (resultError) throw new Error('수정 실패!');
+  const [resultError, result] = await handleError(api.editTodo(todos, payload));
+  if (resultError) {
+    throwError('할 일 수정');
+  }
 
   if (result) {
     handleLoadPromise(); // 리로드
